@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sales Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Sales Dashboard</h1>
+      <p class="source">Source: {{ source }} &middot; {{ "{:,}".format(rows) }} rows &middot; <span id="shown"></span></p>
+    </div>
+    <form id="filters">
+      <label>Region
+        <select name="region">
+          <option value="">All regions</option>
+          {% for region in regions %}<option>{{ region }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Category
+        <select name="category">
+          <option value="">All categories</option>
+          {% for category in categories %}<option>{{ category }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>From
+        <input type="date" name="start" value="{{ default_start }}" min="{{ first_date }}" max="{{ last_date }}">
+      </label>
+      <label>To
+        <input type="date" name="end" value="{{ last_date }}" min="{{ first_date }}" max="{{ last_date }}">
+      </label>
+      <button type="reset">Reset</button>
+    </form>
+  </header>
+
+  <p id="error" role="alert" hidden></p>
+
+  <main>
+    <section class="kpis">
+      <article class="kpi"><h2>Revenue</h2><p class="value" id="kpi-revenue">-</p><p class="change" id="chg-revenue"></p></article>
+      <article class="kpi"><h2>Units sold</h2><p class="value" id="kpi-units">-</p><p class="change" id="chg-units"></p></article>
+      <article class="kpi"><h2>Orders</h2><p class="value" id="kpi-orders">-</p><p class="change" id="chg-orders"></p></article>
+      <article class="kpi"><h2>Avg order value</h2><p class="value" id="kpi-avg_order_value">-</p><p class="change" id="chg-avg_order_value"></p></article>
+    </section>
+
+    <section class="charts">
+      <article class="card wide"><h2>Monthly revenue</h2><div class="chart"><canvas id="monthly"></canvas></div></article>
+      <article class="card"><h2>Revenue by category</h2><div class="chart"><canvas id="category"></canvas></div></article>
+      <article class="card"><h2>Revenue by region</h2><div class="chart"><canvas id="region"></canvas></div></article>
+      <article class="card wide"><h2>Top products</h2><div class="chart"><canvas id="products"></canvas></div></article>
+    </section>
+  </main>
+
+  <footer>Change figures compare with the period of the same length immediately before the selected dates.</footer>
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
